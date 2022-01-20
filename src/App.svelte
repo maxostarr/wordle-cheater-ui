@@ -1,14 +1,21 @@
 <script lang="ts">
   import { runCheater } from "./cheater";
-  let letters = Array.from({ length: 5 }, () => ({ letter: "", value: -1 }));
+  let letters = Array.from({ length: 5 }, () => ({ letter: " ", value: -1 }));
   let letterIndex = 0;
   window.addEventListener("keypress", (e) => {
     let key = e.key;
     if (key.length === 1 && key.match(/[a-z]/i) && letterIndex < 5) {
-      letters[letterIndex++] = { letter: key, value: 0 };
-      letters = [...letters];
+      letters[letterIndex++] = { letter: key.toLocaleLowerCase(), value: 0 };
     }
   });
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Backspace") {
+      if (letterIndex > 0) {
+        letters[--letterIndex] = { letter: " ", value: -1 };
+      }
+    }
+  });
+
   $: wrongLetters = getWrongLetters(letters);
 
   $: correctLetterCorrectPosition = getcorrectLetterCorrectPosition(letters);
@@ -37,13 +44,20 @@
 </script>
 
 <main>
-  {#each letters as letter}
-    <span>{letter.letter}</span>
-  {/each}
-  {#each suggestedLetters as letter}
-    <span>{letter}</span>
-  {/each}
-  {suggestedLetters}
+  <div class="row">
+    {#each letters as letter}
+      <span class="letterContainer">
+        <span class="letter">{letter.letter.toUpperCase()}</span>
+      </span>
+    {/each}
+  </div>
+  <div class="row">
+    {#each suggestedLetters as letter}
+      <span class="letterContainer">
+        <span class="letter">{letter.toUpperCase()}</span>
+      </span>
+    {/each}
+  </div>
 </main>
 
 <style>
@@ -52,14 +66,34 @@
     padding: 1em;
     max-width: 240px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
-  span {
+  .letterContainer {
     display: inline-block;
-    width: 1em;
-    height: 1em;
-    border: 1px solid black;
-    margin: 0.1em;
+    width: 10vw;
+    height: 10vw;
+    background-color: darkslategray;
+    color: white;
+    font-size: xx-large;
+    margin: 0.3em;
+    border-radius: 0.5em;
+  }
+
+  .row {
+    display: grid;
+    width: max-content;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 0.3em;
+  }
+
+  .letter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
   }
 
   @media (min-width: 640px) {
