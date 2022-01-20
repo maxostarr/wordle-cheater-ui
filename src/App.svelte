@@ -34,19 +34,33 @@
   }
 
   function getcorrectLetterCorrectPosition(letters): string[] {
-    return letters.filter((l) => l.value === 1).map((l) => l.letter);
+    return letters.map((l) => l.value ===1 ?  l.letter:"");
   }
   function getCorrectLetterIncorrectPosition(letters): Array<[string, number]> {
     return letters
       .filter((l) => l.value === 2)
       .map((l, i) => [l.letter, i] as [string, number]);
   }
+
+  const handleLetterContainerClick = (index) => (e) => {
+    letters[index] = {
+      ...letters[index],
+      value: (letters[index].value + 1) % 3,
+    };
+    console.log(
+      "🚀 ~ file: App.svelte ~ line 47 ~ handleLetterContainerClick ~ letters[index]",
+      letters[index],
+    );
+  };
 </script>
 
 <main>
   <div class="row">
-    {#each letters as letter}
-      <span class="letterContainer">
+    {#each letters as letter, index}
+      <span
+        class={"letterContainer val" + letter.value}
+        on:click={handleLetterContainerClick(index)}
+      >
         <span class="letter">{letter.letter.toUpperCase()}</span>
       </span>
     {/each}
@@ -77,16 +91,26 @@
     height: 10vw;
     background-color: darkslategray;
     color: white;
-    font-size: xx-large;
-    margin: 0.3em;
-    border-radius: 0.5em;
+    margin: 0.3rem;
+    border-radius: 0.5rem;
+  }
+
+  .val0 {
+    background-color: darkslategray;
+  }
+  .val1 {
+    background-color: greenyellow;
+  }
+  .val2 {
+    background-color: orange;
   }
 
   .row {
     display: grid;
     width: max-content;
     grid-template-columns: repeat(5, 1fr);
-    grid-gap: 0.3em;
+    font-size: 3em;
+    grid-gap: 0.3rem;
   }
 
   .letter {
@@ -94,6 +118,8 @@
     justify-content: center;
     align-items: center;
     height: 100%;
+    user-select: none;
+    cursor: pointer;
   }
 
   @media (min-width: 640px) {
