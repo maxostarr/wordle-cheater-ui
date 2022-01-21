@@ -1,6 +1,9 @@
 <script lang="ts">
   import { runCheater } from "./cheater";
+
+  let oldGuesses = [];
   let letters = Array.from({ length: 5 }, () => ({ letter: " ", value: -1 }));
+
   let letterIndex = 0;
   window.addEventListener("keypress", (e) => {
     let key = e.key;
@@ -16,12 +19,17 @@
     }
   });
 
-  $: wrongLetters = getWrongLetters(letters);
+  $: wrongLetters = getWrongLetters([...oldGuesses, ...letters]);
 
-  $: correctLetterCorrectPosition = getcorrectLetterCorrectPosition(letters);
+  $: correctLetterCorrectPosition = getcorrectLetterCorrectPosition([
+    ...oldGuesses,
+    ...letters,
+  ]);
 
-  $: correctLetterIncorrectPosition =
-    getCorrectLetterIncorrectPosition(letters);
+  $: correctLetterIncorrectPosition = getCorrectLetterIncorrectPosition([
+    ...oldGuesses,
+    ...letters,
+  ]);
 
   $: suggestedLetters = runCheater(
     wrongLetters,
@@ -29,17 +37,31 @@
     correctLetterIncorrectPosition,
   );
 
-  function getWrongLetters(letters): string[] {
-    return letters.filter((l) => l.value === 0).map((l) => l.letter);
+  function getWrongLetters(letters): Array<[string, number]> {
+    return (
+      letters
+        // .filter((l) => l.value === 0)
+        .map((l, i) => l.value === 0 && ([l.letter, i] as [string, number]))
+        .filter((l) => l)
+    );
   }
 
-  function getcorrectLetterCorrectPosition(letters): string[] {
-    return letters.map((l) => l.value ===1 ?  l.letter:"");
+  function getcorrectLetterCorrectPosition(letters): Array<[string, number]> {
+    return (
+      letters
+        // .filter((l) => l.value === 1)
+        .map((l, i) => l.value === 1 && ([l.letter, i] as [string, number]))
+        .filter((l) => l)
+    );
   }
+
   function getCorrectLetterIncorrectPosition(letters): Array<[string, number]> {
-    return letters
-      .filter((l) => l.value === 2)
-      .map((l, i) => [l.letter, i] as [string, number]);
+    return (
+      letters
+        // .filter((l) => l.value === 2)
+        .map((l, i) => l.value === 2 && ([l.letter, i] as [string, number]))
+        .filter((l) => l)
+    );
   }
 
   const handleLetterContainerClick = (index) => (e) => {
@@ -52,10 +74,23 @@
       letters[index],
     );
   };
+
+  const handleSuggestionLetterClick = (index) => (e) => {
+    oldGuesses = [...oldGuesses, letters];
+    letters = suggestedLetters.map((l) => ({ letter: l, value: 0 }));
+    handleLetterContainerClick(index)(e);
+  };
 </script>
 
 <main>
   <div class="row">
+    {#each oldGuesses as oldGuess}
+      {#each oldGuess as letter}
+        <span class={"letterContainer val" + letter.value}>
+          <span class="letter">{letter.letter.toUpperCase()}</span>
+        </span>
+      {/each}
+    {/each}
     {#each letters as letter, index}
       <span
         class={"letterContainer val" + letter.value}
@@ -66,12 +101,21 @@
     {/each}
   </div>
   <div class="row">
-    {#each suggestedLetters as letter}
-      <span class="letterContainer">
+    {#each suggestedLetters as letter, index}
+      <span
+        class="letterContainer"
+        on:click={handleSuggestionLetterClick(index)}
+      >
         <span class="letter">{letter.toUpperCase()}</span>
       </span>
     {/each}
   </div>
+  <pre>
+		{JSON.stringify(wrongLetters)}
+		{JSON.stringify(letters)}
+		{JSON.stringify(oldGuesses)}
+		
+	</pre>
 </main>
 
 <style>

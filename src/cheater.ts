@@ -1,17 +1,17 @@
 import fiveLetterWords from "./five_letter_words.json";
 
 export const runCheater = (
-  wrongLetters: string[],
-  correctLetterCorrectPosition: string[],
+  incorrectLetterIncorrectPosition: Array<[string, number]>,
+  correctLetterCorrectPosition: Array<[string, number]>,
   correctLetterIncorrectPosition: Array<[string, number]>,
 ) => {
   if (
-    !wrongLetters.length &&
+    !incorrectLetterIncorrectPosition.length &&
     !correctLetterCorrectPosition.length &&
     !correctLetterIncorrectPosition.length
   ) {
     console.log("No words to guess");
-    return "";
+    return [];
   }
   console.log(`Starting with ${fiveLetterWords.length} words`);
 
@@ -25,17 +25,20 @@ export const runCheater = (
   // ];
 
   // sanity check
-  wrongLetters.forEach((letter) => {
-    if (correctLetterCorrectPosition.includes(letter)) {
-      throw new Error(
-        `${letter} is in both correct and wrong letter positions`,
-      );
-    }
-  });
+  // wrongLetters.forEach((letter) => {
+  //   if (correctLetterCorrectPosition.includes(letter)) {
+  //     throw new Error(
+  //       `${letter} is in both correct and wrong letter positions`,
+  //     );
+  //   }
+  // });
 
-  const eleminateWrongLetters = wrongLetters.reduce((prev, letter) => {
-    return prev.filter((word) => !word.includes(letter));
-  }, fiveLetterWords);
+  const eleminateWrongLetters = incorrectLetterIncorrectPosition.reduce(
+    (prev, letter) => {
+      return prev.filter((word) => word[letter[1]] !== letter[0]);
+    },
+    fiveLetterWords,
+  );
 
   console.log(
     `Without wrong letters with ${eleminateWrongLetters.length} words`,
@@ -43,7 +46,7 @@ export const runCheater = (
 
   const includeCorrectLettersInPosition = correctLetterCorrectPosition.reduce(
     (prev, letter, i) => {
-      return prev.filter((word) => (letter ? word[i] === letter : true));
+      return prev.filter((word) => word[letter[1]] === letter[0]);
     },
     eleminateWrongLetters,
   );
@@ -62,5 +65,5 @@ export const runCheater = (
     `With correct letters in position ${includeCorrectLetters.length} words`,
   );
 
-  return includeCorrectLetters[0].split("");
+  return includeCorrectLetters.length ? includeCorrectLetters[0].split("") : [];
 };
