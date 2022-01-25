@@ -2,9 +2,11 @@
   import { runCheater } from "./cheater";
 
   let oldGuesses = [];
-  let letters = Array.from({ length: 5 }, () => ({ letter: " ", value: -1 }));
+  // let letters = Array.from({ length: 5 }, () => ({ letter: " ", value: -1 }));
+  let letters = "areae".split("").map((l) => ({ letter: l, value: 0 }));
 
   let letterIndex = 0;
+  let suggestionIndex = 0;
   window.addEventListener("keypress", (e) => {
     let key = e.key;
     if (key.length === 1 && key.match(/[a-z]/i) && letterIndex < 5) {
@@ -35,13 +37,13 @@
     wrongLetters,
     correctLetterCorrectPosition,
     correctLetterIncorrectPosition,
-  );
+  )[suggestionIndex].split("");
 
   function getWrongLetters(letters): Array<[string, number]> {
     return (
       letters
         // .filter((l) => l.value === 0)
-        .map((l, i) => l.value === 0 && ([l.letter, i] as [string, number]))
+        .map((l, i) => l.value === 0 && ([l.letter, i % 5] as [string, number]))
         .filter((l) => l)
     );
   }
@@ -50,7 +52,7 @@
     return (
       letters
         // .filter((l) => l.value === 1)
-        .map((l, i) => l.value === 1 && ([l.letter, i] as [string, number]))
+        .map((l, i) => l.value === 1 && ([l.letter, i % 5] as [string, number]))
         .filter((l) => l)
     );
   }
@@ -59,12 +61,13 @@
     return (
       letters
         // .filter((l) => l.value === 2)
-        .map((l, i) => l.value === 2 && ([l.letter, i] as [string, number]))
+        .map((l, i) => l.value === 2 && ([l.letter, i % 5] as [string, number]))
         .filter((l) => l)
     );
   }
 
   const handleLetterContainerClick = (index) => (e) => {
+    suggestionIndex = 0;
     letters[index] = {
       ...letters[index],
       value: (letters[index].value + 1) % 3,
@@ -76,20 +79,27 @@
   };
 
   const handleSuggestionLetterClick = (index) => (e) => {
-    oldGuesses = [...oldGuesses, letters];
+    oldGuesses = [...oldGuesses, ...letters];
     letters = suggestedLetters.map((l) => ({ letter: l, value: 0 }));
     handleLetterContainerClick(index)(e);
+  };
+
+  const handleResetClick = (e) => {
+    oldGuesses = [];
+    letters = Array.from({ length: 5 }, () => ({ letter: " ", value: -1 }));
+    letterIndex = 0;
+    suggestionIndex = 0;
   };
 </script>
 
 <main>
   <div class="row">
-    {#each oldGuesses as oldGuess}
-      {#each oldGuess as letter}
-        <span class={"letterContainer val" + letter.value}>
-          <span class="letter">{letter.letter.toUpperCase()}</span>
-        </span>
-      {/each}
+    {#each oldGuesses as letter}
+      <!-- {#each oldGuess as letter} -->
+      <span class={"letterContainer val" + letter.value}>
+        <span class="letter">{letter.letter.toUpperCase()}</span>
+      </span>
+      <!-- {/each} -->
     {/each}
     {#each letters as letter, index}
       <span
@@ -110,12 +120,16 @@
       </span>
     {/each}
   </div>
-  <pre>
+  <!-- <pre>
 		{JSON.stringify(wrongLetters)}
-		{JSON.stringify(letters)}
-		{JSON.stringify(oldGuesses)}
+		{JSON.stringify(correctLetterCorrectPosition)}
+		{JSON.stringify(correctLetterIncorrectPosition)}
 		
-	</pre>
+	</pre> -->
+  <div class="buttons">
+    <button class="next" on:click={() => suggestionIndex++}>Next Guess</button>
+    <button class="reset" on:click={handleResetClick}>Reset</button>
+  </div>
 </main>
 
 <style>
@@ -155,6 +169,28 @@
     grid-template-columns: repeat(5, 1fr);
     font-size: 3em;
     grid-gap: 0.3rem;
+  }
+
+  .buttons {
+    padding-top: 2em;
+    display: flex;
+    width: 50vw;
+    justify-content: space-around;
+  }
+
+  button {
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 1.5em;
+  }
+
+  .next {
+    background-color: #4caf50;
+  }
+
+  .reset {
+    background-color: #f44336;
   }
 
   .letter {

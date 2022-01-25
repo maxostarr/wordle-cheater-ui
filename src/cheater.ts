@@ -1,19 +1,53 @@
-import fiveLetterWords from "./five_letter_words.json";
+import fiveLetterWords from "./five_letter_words_sorted.json";
 
 export const runCheater = (
   incorrectLetterIncorrectPosition: Array<[string, number]>,
   correctLetterCorrectPosition: Array<[string, number]>,
   correctLetterIncorrectPosition: Array<[string, number]>,
 ) => {
+  console.log(
+    "🚀 ~ file: cheater.ts ~ line 8 ~ correctLetterIncorrectPosition",
+    correctLetterIncorrectPosition,
+  );
+  console.log(
+    "🚀 ~ file: cheater.ts ~ line 8 ~ correctLetterCorrectPosition",
+    correctLetterCorrectPosition,
+  );
+  console.log(
+    "🚀 ~ file: cheater.ts ~ line 8 ~ incorrectLetterIncorrectPosition",
+    incorrectLetterIncorrectPosition,
+  );
   if (
     !incorrectLetterIncorrectPosition.length &&
     !correctLetterCorrectPosition.length &&
     !correctLetterIncorrectPosition.length
   ) {
     console.log("No words to guess");
-    return [];
+    return [""];
   }
   console.log(`Starting with ${fiveLetterWords.length} words`);
+
+  const lettersNotInTheWord = incorrectLetterIncorrectPosition
+    .filter(
+      ([letter]) =>
+        !correctLetterIncorrectPosition.find(([l]) => l === letter) &&
+        !correctLetterCorrectPosition.find(([l]) => l === letter),
+    )
+    .map(([letter]) => letter);
+  console.log(
+    "🚀 ~ file: cheater.ts ~ line 23 ~ lettersNotInTheWord",
+    lettersNotInTheWord,
+  );
+
+  const notDoubleLetters = incorrectLetterIncorrectPosition.filter(
+    ([letter]) => {
+      return !lettersNotInTheWord.includes(letter);
+    },
+  );
+  console.log(
+    "🚀 ~ file: cheater.ts ~ line 47 ~ notDoubleLetters",
+    notDoubleLetters,
+  );
 
   // const wrongLetters = `i,a,e,l,u`.split(",");
   // const correctLetterCorrectPositions = ",,,,t".split(",");
@@ -33,22 +67,34 @@ export const runCheater = (
   //   }
   // });
 
-  const eleminateWrongLetters = incorrectLetterIncorrectPosition.reduce(
-    (prev, letter) => {
+  const eleminateWrongLetters = lettersNotInTheWord.reduce((prev, letter) => {
+    return prev.filter((word) => !word.includes(letter));
+  }, fiveLetterWords);
+
+  const eleminateWrongLettersInPosition =
+    incorrectLetterIncorrectPosition.reduce((prev, letter) => {
       return prev.filter((word) => word[letter[1]] !== letter[0]);
-    },
-    fiveLetterWords,
-  );
+    }, eleminateWrongLetters);
 
   console.log(
-    `Without wrong letters with ${eleminateWrongLetters.length} words`,
+    `Without wrong letters with ${eleminateWrongLettersInPosition.length} words`,
+  );
+
+  const eliminateWrongDuplicates = notDoubleLetters.reduce((prev, [letter]) => {
+    return prev.filter(
+      (word) => word.indexOf(letter) === word.lastIndexOf(letter),
+    );
+  }, eleminateWrongLettersInPosition);
+
+  console.log(
+    `Without wrong duplicates with ${eliminateWrongDuplicates.length} words`,
   );
 
   const includeCorrectLettersInPosition = correctLetterCorrectPosition.reduce(
     (prev, letter, i) => {
       return prev.filter((word) => word[letter[1]] === letter[0]);
     },
-    eleminateWrongLetters,
+    eliminateWrongDuplicates,
   );
 
   const includeCorrectLetters = correctLetterIncorrectPosition.reduce(
@@ -65,5 +111,5 @@ export const runCheater = (
     `With correct letters in position ${includeCorrectLetters.length} words`,
   );
 
-  return includeCorrectLetters.length ? includeCorrectLetters[0].split("") : [];
+  return includeCorrectLetters.length ? includeCorrectLetters : [""];
 };
