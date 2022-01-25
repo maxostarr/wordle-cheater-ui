@@ -33,11 +33,13 @@
     ...letters,
   ]);
 
-  $: suggestedLetters = runCheater(
+  $: cheaterResult = runCheater(
     wrongLetters,
     correctLetterCorrectPosition,
     correctLetterIncorrectPosition,
-  )[suggestionIndex].split("");
+  );
+
+  $: suggestedLetters = cheaterResult[suggestionIndex].split("");
 
   function getWrongLetters(letters): Array<[string, number]> {
     return (
@@ -84,6 +86,10 @@
     handleLetterContainerClick(index)(e);
   };
 
+  const handleNextGuessClick = (e) => {
+    suggestionIndex = (suggestionIndex + 1) % cheaterResult.length;
+  };
+
   const handleResetClick = (e) => {
     oldGuesses = [];
     letters = Array.from({ length: 5 }, () => ({ letter: " ", value: -1 }));
@@ -127,7 +133,7 @@
 		
 	</pre> -->
   <div class="buttons">
-    <button class="next" on:click={() => suggestionIndex++}>Next Guess</button>
+    <button class="next" on:click={handleNextGuessClick}>Next Guess</button>
     <button class="reset" on:click={handleResetClick}>Reset</button>
   </div>
 </main>
