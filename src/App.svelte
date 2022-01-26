@@ -2,24 +2,24 @@
   import { runCheater } from "./cheater";
 
   let oldGuesses = [];
-  // let letters = Array.from({ length: 5 }, () => ({ letter: " ", value: -1 }));
-  let letters = "irate".split("").map((l) => ({ letter: l, value: 0 }));
+  let letters = Array.from({ length: 5 }, () => ({ letter: " ", value: -1 }));
+  // let letters = "irate".split("").map((l) => ({ letter: l, value: 0 }));
 
   let letterIndex = 0;
   let suggestionIndex = 0;
-  // window.addEventListener("keypress", (e) => {
-  //   let key = e.key;
-  //   if (key.length === 1 && key.match(/[a-z]/i) && letterIndex < 5) {
-  //     letters[letterIndex++] = { letter: key.toLocaleLowerCase(), value: 0 };
-  //   }
-  // });
-  // window.addEventListener("keydown", (e) => {
-  //   if (e.key === "Backspace") {
-  //     if (letterIndex > 0) {
-  //       letters[--letterIndex] = { letter: " ", value: -1 };
-  //     }
-  //   }
-  // });
+  window.addEventListener("keypress", (e) => {
+    let key = e.key;
+    if (key.length === 1 && key.match(/[a-z]/i) && letterIndex < 5) {
+      letters[letterIndex++] = { letter: key.toLocaleLowerCase(), value: 0 };
+    }
+  });
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Backspace") {
+      if (letterIndex > 0) {
+        letters[--letterIndex] = { letter: " ", value: -1 };
+      }
+    }
+  });
 
   $: wrongLetters = getWrongLetters([...oldGuesses, ...letters]);
 
@@ -92,7 +92,8 @@
 
   const handleResetClick = (e) => {
     oldGuesses = [];
-    letters = "irate".split("").map((l) => ({ letter: l, value: 0 }));
+    // letters = "irate".split("").map((l) => ({ letter: l, value: 0 }));
+    letters = Array.from({ length: 5 }, () => ({ letter: " ", value: -1 }));
     letterIndex = 0;
     suggestionIndex = 0;
   };
