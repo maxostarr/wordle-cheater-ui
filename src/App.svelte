@@ -159,16 +159,28 @@
     {/each}
   </div>
   {#if cheaterResult.length > 1}
-    <div class="row suggestion">
-      {#each suggestedLetters as letter, index}
-        <span
-          class="letterContainer"
-          on:click={handleSuggestionLetterClick(index)}
-        >
-          <span class="letter">{letter.toUpperCase()}</span>
-        </span>
-      {/each}
-    </div>
+    {#key oldGuesses}
+      <div
+        class="row suggestion"
+        in:fly={{ x: 200 }}
+        out:fly={{ x: 200, duration: 0 }}
+      >
+        {#each suggestedLetters as letter, index}
+          <span
+            class="letterContainer"
+            on:click={handleSuggestionLetterClick(index)}
+          >
+            {#key suggestedLetters[index]}
+              <span
+                in:fly={{ y: -30, duration: suggestionIndex > 0 ? 200 : 0 }}
+                out:fly={{ y: 30, duration: suggestionIndex > 0 ? 200 : 0 }}
+                class="letter">{letter.toUpperCase()}</span
+              >
+            {/key}
+          </span>
+        {/each}
+      </div>
+    {/key}
   {/if}
   <div class="buttons">
     <button class="next" on:click={handleNextGuessClick}>Next Guess</button>
@@ -197,7 +209,7 @@
   }
 
   .letterContainer {
-    display: inline-block;
+    display: grid;
     width: 7vw;
     height: 7vw;
     background-color: darkslategray;
@@ -296,6 +308,8 @@
     height: 100%;
     user-select: none;
     cursor: pointer;
+    grid-column: 1/2;
+    grid-row: 1/2;
   }
 
   @media (min-width: 640px) {
