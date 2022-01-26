@@ -1,5 +1,19 @@
 <script lang="ts">
   import { runCheater } from "./cheater";
+  import * as Sentry from "@sentry/browser";
+  import { Integrations } from "@sentry/tracing";
+
+  Sentry.init({
+    dsn: "https://da533ec5545444559e6eb91312f42166@o1126860.ingest.sentry.io/6168315",
+    integrations: [new Integrations.BrowserTracing()],
+
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 1.0,
+  });
+
+  myUndefinedFunction();
 
   let oldGuesses = [];
   let letters = Array.from({ length: 5 }, () => ({ letter: " ", value: -1 }));
