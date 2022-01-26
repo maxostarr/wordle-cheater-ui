@@ -2,6 +2,7 @@
   import { runCheater } from "./cheater";
   import * as Sentry from "@sentry/browser";
   import { Integrations } from "@sentry/tracing";
+  import { fade, fly } from "svelte/transition";
 
   Sentry.init({
     dsn: "https://da533ec5545444559e6eb91312f42166@o1126860.ingest.sentry.io/6168315",
@@ -13,6 +14,7 @@
     tracesSampleRate: 1.0,
   });
 
+  let hasClickedLetter = false;
   let oldGuesses = [];
   let letters = Array.from({ length: 5 }, () => ({ letter: " ", value: -1 }));
   // let letters = "irate".split("").map((l) => ({ letter: l, value: 0 }));
@@ -81,15 +83,21 @@
   }
 
   const handleLetterContainerClick = (index) => (e) => {
+    hasClickedLetter = true;
     suggestionIndex = 0;
     letters[index] = {
       ...letters[index],
       value: (letters[index].value + 1) % 3,
     };
-    console.log(
-      "🚀 ~ file: App.svelte ~ line 47 ~ handleLetterContainerClick ~ letters[index]",
-      letters[index],
-    );
+  };
+
+  const handleOldLetterClick = (index) => (e) => {
+    hasClickedLetter = true;
+    suggestionIndex = 0;
+    oldGuesses[index] = {
+      ...oldGuesses[index],
+      value: (oldGuesses[index].value + 1) % 3,
+    };
   };
 
   const handleSuggestionLetterClick = (index) => (e) => {
@@ -103,6 +111,7 @@
   };
 
   const handleResetClick = (e) => {
+    hasClickedLetter = false;
     oldGuesses = [];
     // letters = "irate".split("").map((l) => ({ letter: l, value: 0 }));
     letters = Array.from({ length: 5 }, () => ({ letter: " ", value: -1 }));
@@ -112,10 +121,30 @@
 </script>
 
 <main>
+  <header>
+    {#if letterIndex < 5}
+      <h1 in:fly={{ x: 1000 }} out:fly={{ x: -1000 }}>
+        Type in your first guess!
+      </h1>
+    {/if}
+    {#if letterIndex === 5 && !hasClickedLetter}
+      <h1 in:fly={{ x: 1000 }} out:fly={{ x: -1000 }}>
+        Click each letter to change the color.
+      </h1>
+    {/if}
+    {#if hasClickedLetter}
+      <h1 in:fly={{ x: 1000 }} out:fly={{ x: -1000 }}>
+        Keep trying each guess and enjoy!
+      </h1>
+    {/if}
+  </header>
   <div class="row">
-    {#each oldGuesses as letter}
+    {#each oldGuesses as letter, index}
       <!-- {#each oldGuess as letter} -->
-      <span class={"letterContainer val" + letter.value}>
+      <span
+        class={"letterContainer val" + letter.value}
+        on:click={handleOldLetterClick(index)}
+      >
         <span class={"letter"}>{letter.letter.toUpperCase()}</span>
       </span>
       <!-- {/each} -->
@@ -131,22 +160,18 @@
       </span>
     {/each}
   </div>
-  <div class="row suggestion">
-    {#each suggestedLetters as letter, index}
-      <span
-        class="letterContainer"
-        on:click={handleSuggestionLetterClick(index)}
-      >
-        <span class="letter">{letter.toUpperCase()}</span>
-      </span>
-    {/each}
-  </div>
-  <!-- <pre>
-		{JSON.stringify(wrongLetters)}
-		{JSON.stringify(correctLetterCorrectPosition)}
-		{JSON.stringify(correctLetterIncorrectPosition)}
-		
-	</pre> -->
+  {#if cheaterResult.length > 1}
+    <div class="row suggestion">
+      {#each suggestedLetters as letter, index}
+        <span
+          class="letterContainer"
+          on:click={handleSuggestionLetterClick(index)}
+        >
+          <span class="letter">{letter.toUpperCase()}</span>
+        </span>
+      {/each}
+    </div>
+  {/if}
   <div class="buttons">
     <button class="next" on:click={handleNextGuessClick}>Next Guess</button>
     <button class="reset" on:click={handleResetClick}>Reset</button>
@@ -162,6 +187,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+  }
+
+  header {
+    display: grid;
+  }
+
+  header h1 {
+    grid-column: 1/2;
+    grid-row: 1/2;
   }
 
   .letterContainer {
