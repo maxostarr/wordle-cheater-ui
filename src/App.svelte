@@ -140,14 +140,12 @@
   </header>
   <div class="row">
     {#each oldGuesses as letter, index}
-      <!-- {#each oldGuess as letter} -->
       <span
         class={"letterContainer val" + letter.value}
         on:click={handleOldLetterClick(index)}
       >
         <span class={"letter"}>{letter.letter.toUpperCase()}</span>
       </span>
-      <!-- {/each} -->
     {/each}
     {#each letters as letter, index}
       <span
