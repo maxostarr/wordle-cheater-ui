@@ -3,23 +3,23 @@
 
   let oldGuesses = [];
   // let letters = Array.from({ length: 5 }, () => ({ letter: " ", value: -1 }));
-  let letters = "areae".split("").map((l) => ({ letter: l, value: 0 }));
+  let letters = "irate".split("").map((l) => ({ letter: l, value: 0 }));
 
   let letterIndex = 0;
   let suggestionIndex = 0;
-  window.addEventListener("keypress", (e) => {
-    let key = e.key;
-    if (key.length === 1 && key.match(/[a-z]/i) && letterIndex < 5) {
-      letters[letterIndex++] = { letter: key.toLocaleLowerCase(), value: 0 };
-    }
-  });
-  window.addEventListener("keydown", (e) => {
-    if (e.key === "Backspace") {
-      if (letterIndex > 0) {
-        letters[--letterIndex] = { letter: " ", value: -1 };
-      }
-    }
-  });
+  // window.addEventListener("keypress", (e) => {
+  //   let key = e.key;
+  //   if (key.length === 1 && key.match(/[a-z]/i) && letterIndex < 5) {
+  //     letters[letterIndex++] = { letter: key.toLocaleLowerCase(), value: 0 };
+  //   }
+  // });
+  // window.addEventListener("keydown", (e) => {
+  //   if (e.key === "Backspace") {
+  //     if (letterIndex > 0) {
+  //       letters[--letterIndex] = { letter: " ", value: -1 };
+  //     }
+  //   }
+  // });
 
   $: wrongLetters = getWrongLetters([...oldGuesses, ...letters]);
 
@@ -92,7 +92,7 @@
 
   const handleResetClick = (e) => {
     oldGuesses = [];
-    letters = Array.from({ length: 5 }, () => ({ letter: " ", value: -1 }));
+    letters = "irate".split("").map((l) => ({ letter: l, value: 0 }));
     letterIndex = 0;
     suggestionIndex = 0;
   };
@@ -116,7 +116,7 @@
       </span>
     {/each}
   </div>
-  <div class="row">
+  <div class="row suggestion">
     {#each suggestedLetters as letter, index}
       <span
         class="letterContainer"
@@ -151,8 +151,8 @@
 
   .letterContainer {
     display: inline-block;
-    width: 10vw;
-    height: 10vw;
+    width: 7vw;
+    height: 7vw;
     background-color: darkslategray;
     color: white;
     margin: 0.3rem;
@@ -175,6 +175,11 @@
     grid-template-columns: repeat(5, 1fr);
     font-size: 3em;
     grid-gap: 0.3rem;
+  }
+
+  .suggestion {
+    border: 0.5px solid white;
+    border-radius: 0.5rem;
   }
 
   .buttons {
