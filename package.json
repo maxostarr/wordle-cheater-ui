@@ -26,6 +26,8 @@
     "typescript": "^4.0.0"
   },
   "dependencies": {
+    "@sentry/browser": "^6.17.2",
+    "@sentry/tracing": "^6.17.2",
     "sirv-cli": "^2.0.0"
   }
 }

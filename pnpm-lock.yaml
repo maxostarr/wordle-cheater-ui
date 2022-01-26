@@ -5,6 +5,8 @@ specifiers:
   '@rollup/plugin-json': ^4.1.0
   '@rollup/plugin-node-resolve': ^11.0.0
   '@rollup/plugin-typescript': ^8.0.0
+  '@sentry/browser': ^6.17.2
+  '@sentry/tracing': ^6.17.2
   '@tsconfig/svelte': ^2.0.0
   rollup: ^2.3.4
   rollup-plugin-css-only: ^3.1.0
@@ -19,6 +21,8 @@ specifiers:
   typescript: ^4.0.0
 
 dependencies:
+  '@sentry/browser': 6.17.2
+  '@sentry/tracing': 6.17.2
   sirv-cli: 2.0.2
 
 devDependencies:
@@ -160,6 +164,69 @@ packages:
       estree-walker: 2.0.2
       picomatch: 2.3.1
     dev: true
+
+  /@sentry/browser/6.17.2:
+    resolution: {integrity: sha512-4Ow5z9GxK5dG9+stBNKb7s6NoxE4wgEcHRmO66QTK4gH2NNmzV4R/aaZ7iDoS/lD86sH0M86jm76dpg9uiJPmw==}
+    engines: {node: '>=6'}
+    dependencies:
+      '@sentry/core': 6.17.2
+      '@sentry/types': 6.17.2
+      '@sentry/utils': 6.17.2
+      tslib: 1.14.1
+    dev: false
+
+  /@sentry/core/6.17.2:
+    resolution: {integrity: sha512-Uew0CNMr+QvowrF4EJYjOUgHep/sZJ3l5zevPEELugIgqWBodd+ZDCV3fQFR7cr6KOqx1rMgVrgcKIkLl0l+RA==}
+    engines: {node: '>=6'}
+    dependencies:
+      '@sentry/hub': 6.17.2
+      '@sentry/minimal': 6.17.2
+      '@sentry/types': 6.17.2
+      '@sentry/utils': 6.17.2
+      tslib: 1.14.1
+    dev: false
+
+  /@sentry/hub/6.17.2:
+    resolution: {integrity: sha512-CMi6jU920bTwRTmGHjP4u8toOx4gm1dsx+rsxvp+FKzqRwpwoyi9mOw8oEYERVzaqaYceGdFylyRUrjdf0f77g==}
+    engines: {node: '>=6'}
+    dependencies:
+      '@sentry/types': 6.17.2
+      '@sentry/utils': 6.17.2
+      tslib: 1.14.1
+    dev: false
+
+  /@sentry/minimal/6.17.2:
+    resolution: {integrity: sha512-Cdh+iM6QhLKfxwUWWP4mk2K7+EsQj4tuF2dGQke4Zcbp7zQ7wbcMruUcZHiZfvg5kiSYxwNVkH7cXMzcO7AJsg==}
+    engines: {node: '>=6'}
+    dependencies:
+      '@sentry/hub': 6.17.2
+      '@sentry/types': 6.17.2
+      tslib: 1.14.1
+    dev: false
+
+  /@sentry/tracing/6.17.2:
+    resolution: {integrity: sha512-oWY2Ga+5D5f90utvfF2Y0eQvme+eS768ZWjR+klRYgZWoY8r1v8uWwWsvroYU1g+h6X0G/xh3giFjsdOWtRENw==}
+    engines: {node: '>=6'}
+    dependencies:
+      '@sentry/hub': 6.17.2
+      '@sentry/minimal': 6.17.2
+      '@sentry/types': 6.17.2
+      '@sentry/utils': 6.17.2
+      tslib: 1.14.1
+    dev: false
+
+  /@sentry/types/6.17.2:
+    resolution: {integrity: sha512-UrFLRDz5mn253O8k/XftLxoldF+NyZdkqKLGIQmST5HEVr7ub9nQJ4Y5ZFA3zJYWpraaW8faIbuw+pgetC8hmQ==}
+    engines: {node: '>=6'}
+    dev: false
+
+  /@sentry/utils/6.17.2:
+    resolution: {integrity: sha512-ePWtO44KJQwUULOiU86fa1WU3Ird2TH0i39gqB2d3zNS3QyVp9qPlzSdPKSPJ9LdgadzBHw7ikEuE+GY8JTrhA==}
+    engines: {node: '>=6'}
+    dependencies:
+      '@sentry/types': 6.17.2
+      tslib: 1.14.1
+    dev: false
 
   /@tsconfig/svelte/2.0.1:
     resolution: {integrity: sha512-aqkICXbM1oX5FfgZd2qSSAGdyo/NRxjWCamxoyi3T8iVQnzGge19HhDYzZ6NrVOW7bhcWNSq9XexWFtMzbB24A==}
@@ -949,6 +1016,10 @@ packages:
   /totalist/3.0.0:
     resolution: {integrity: sha512-eM+pCBxXO/njtF7vdFsHuqb+ElbxqtI4r5EAvk6grfAFyJ6IvWlSkfZ5T9ozC6xWw3Fj1fGoSmrl0gUs46JVIw==}
     engines: {node: '>=6'}
+    dev: false
+
+  /tslib/1.14.1:
+    resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
     dev: false
 
   /tslib/2.3.1:
