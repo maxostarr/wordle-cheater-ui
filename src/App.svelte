@@ -116,7 +116,7 @@
     {#each oldGuesses as letter}
       <!-- {#each oldGuess as letter} -->
       <span class={"letterContainer val" + letter.value}>
-        <span class="letter">{letter.letter.toUpperCase()}</span>
+        <span class={"letter"}>{letter.letter.toUpperCase()}</span>
       </span>
       <!-- {/each} -->
     {/each}
@@ -125,7 +125,9 @@
         class={"letterContainer val" + letter.value}
         on:click={handleLetterContainerClick(index)}
       >
-        <span class="letter">{letter.letter.toUpperCase()}</span>
+        <span class={"letter" + (letterIndex === index ? " cursor" : "")}
+          >{letter.letter.toUpperCase()}</span
+        >
       </span>
     {/each}
   </div>
@@ -180,6 +182,44 @@
   }
   .val2 {
     background-color: orange;
+  }
+
+  .cursor::after {
+    content: "";
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 70%;
+    font-weight: lighter;
+    background-color: white;
+    border-radius: 0.1rem;
+    z-index: 10;
+    animation: blink-animation 1.25s infinite;
+    -webkit-animation: blink-animation 1.25s infinite;
+  }
+
+  @keyframes blink-animation {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  @-webkit-keyframes blink-animation {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
   }
 
   .row {
