@@ -13,8 +13,6 @@
     tracesSampleRate: 1.0,
   });
 
-  myUndefinedFunction();
-
   let oldGuesses = [];
   let letters = Array.from({ length: 5 }, () => ({ letter: " ", value: -1 }));
   // let letters = "irate".split("").map((l) => ({ letter: l, value: 0 }));
